@@ -130,13 +130,11 @@ $( function() {
     //comment
     function addMaps(maps) {
         for(var i in maps) {
-
-            $("#eventList").append(
-                "<tr class=\" event \" data-toggle=\"modal\" data-target=\"#myModal\" data-map=\"" +
+            $("#mapList").append(
+                "<button class=\" event button \" data-toggle=\"modal\" data-target=\"#myModal\" data-map=\"" +
                 maps[i]["map"] + "\" data-title=\"" + maps[i]["name"] + "\">" +
-                "<td>" +
-                maps[i]["name"] + "</td>" +
-                "</tr>");
+                maps[i]["name"] +
+                "</button>");
         }
         $(".event").click(function(e) {
             $("#myModalLabel").html(e.currentTarget.getAttribute("data-title"));
