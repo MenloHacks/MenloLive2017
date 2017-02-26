@@ -1,16 +1,22 @@
 $( function() {
 
-    var end;
-    var until_end = $("#until-end");
     var until_hacking_end = $("#until-hacking-end");
     var hacking_end;
+    var hacking_start;
     $.get("https://api.menlohacks.com/times", function(data) {
-        end = new Date(data["data"]["event_end_time"]);
         hacking_end = new Date(data["data"]["hacking_end_time"]);
+        hacking_start = new Date(data["data"]["hacking_start_time"]);
     });
     setInterval(function() {
-        until_end.text(formatDate(end - new Date(Date.now())));
-        until_hacking_end.text(formatDate(end - new Date(Date.now())));
+        var now = new Date(Date.now());
+        if (now < hacking_start){
+            until_hacking_end.text("Hacking Hasn't Started");
+            $(".countdown-info").text("");
+        } else if (now < hacking_end && now > hacking_start) {
+            until_hacking_end.text(formatDate(hacking_end - new Date(Date.now())));
+        } else {
+            until_hacking_end.text("Hacking Is Now Over");
+        }
     }, 1000);
     function formatDate(date) {
         var hour = Math.floor(date/1000/60/60);
@@ -114,6 +120,26 @@ $( function() {
         $(".event").click(function(e) {
             $("#myModalLabel").html(e.currentTarget.getAttribute("data-title"));
             $("#mainDescription").html(e.currentTarget.getAttribute("data-desc"));
+            $("#mainMap").attr("src", e.currentTarget.getAttribute("data-map"));
+        });
+    }
+
+    $.get("https://api.menlohacks.com/maps", function(data) {
+        addMaps(data["data"]);
+    });
+
+    function addMaps(maps) {
+        for(var i in maps) {
+
+            $("#eventList").append(
+                "<tr class=\" event \" data-toggle=\"modal\" data-target=\"#myModal\" data-map=\"" +
+                maps[i]["map"] + "\" data-title=\"" + maps[i]["name"] + "\">" +
+                "<td>" +
+                maps[i]["name"] + "</td>" +
+                "</tr>");
+        }
+        $(".event").click(function(e) {
+            $("#myModalLabel").html(e.currentTarget.getAttribute("data-title"));
             $("#mainMap").attr("src", e.currentTarget.getAttribute("data-map"));
         });
     }

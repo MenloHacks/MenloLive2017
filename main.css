@@ -7,6 +7,7 @@ body {
 #countdown p{
     text-align: center;
     font-size: 5em;
+    color: #595959;
 }
 #countdown .countdown-info {
     font-size: 2em;
@@ -35,7 +36,10 @@ h1, h2, h3 {
     z-index: -1;
 
     display: block;
-    background: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) ), url('https://c2.staticflickr.com/6/5657/21910039498_907e679b57_h.jpg');
+    background: -moz-linear-gradient(to top, rgba(60, 20, 20, 0.9), rgba(30, 30, 30, 0.5)), url("https://menlohacks.com/images/hero.jpg");
+    background: -webkit-linear-gradient(to top, rgba(60, 20, 20, 0.9), rgba(30, 30, 30, 0.5)), url("https://menlohacks.com/images/hero.jpg");
+    background: -ms-linear-gradient(to top, rgba(60, 20, 20, 0.9), rgba(30, 30, 30, 0.5)), url("https://menlohacks.com/images/hero.jpg");
+    background: linear-gradient(to top, rgba(60, 20, 20, 0.9), rgba(30, 30, 30, 0.5)), url("https://menlohacks.com/images/hero.jpg");
     background-size: cover;
     width: calc(100% + 30px);
     height: calc(100% + 30px);
