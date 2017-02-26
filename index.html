@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    <script
+    src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+    crossorigin="anonymous"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    
+    <link rel="stylesheet" type="text/css" href="main.css">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MenloHacks Live</title>
+</head>
+<body class="container">
+    <div class="background-image"></div>
+    <div class="row text-center">
+        <img class="logo-header" src="https://menlohacks.com/images/menlohacks.svg">
+    </div>
+    <div class="row" id="countdown">
+            <p id="until-hacking-end">Countdown</p>
+            <p class="countdown-info">Until hacking ends</p>
+            <p id="until-end">Countdown</p>
+            <p class="countdown-info">Until event ends</p>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <h2>Announcements</h2>
+            <div class="white">
+                <table class="table table-striped" id="announcementList">
+                    <tr>
+                        <th>Announcement</th>
+                        <th>Time</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <h2>Upcoming Events</h2>
+            <div class="white">
+                <table class="table table-striped table-hover" id="eventList">
+                    <tr>
+                        <th>Event</th>
+                        <th>Location</th>
+                        <th>Time</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="col-sm-6"></div>
+    </div>
+    <script src="main.js"></script>
+    <script src="https://js.pusher.com/4.0/pusher.min.js"></script>
+    <!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+          <img id="mainMap" src="" style="width: 72%; margin-left: 14%; margin-bottom: 20px;">
+          <p id="mainDescription"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

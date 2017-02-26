@@ -1,0 +1,57 @@
+body {
+    /*background: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) ), url('https://c2.staticflickr.com/6/5657/21910039498_907e679b57_h.jpg');
+    background-size: cover;
+    width: 100%;*/
+}
+
+#countdown p{
+    text-align: center;
+    font-size: 5em;
+}
+#countdown .countdown-info {
+    font-size: 2em;
+}
+
+.logo-header {
+    width: 40%;
+    max-width: 250px;
+    margin-top: 25px;
+}
+
+h1, h2, h3 {
+    color: white;
+}
+
+.white {
+    background-color: white;
+}
+
+.background-image {
+    position: fixed;
+    left: -15px;
+    right: -15px;
+    top: -15px;
+    bottom: -15px;
+    z-index: -1;
+
+    display: block;
+    background: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) ), url('https://c2.staticflickr.com/6/5657/21910039498_907e679b57_h.jpg');
+    background-size: cover;
+    width: calc(100% + 30px);
+    height: calc(100% + 30px);
+
+    -webkit-filter: blur(15px);
+    -moz-filter: blur(15px);
+    -o-filter: blur(15px);
+    -ms-filter: blur(15px);
+    filter: blur(15px);
+}
+
+.event-ongoing {
+    background-color: #337ab7 !important;
+    color: white;
+}
+
+.event-ongoing a {
+    color: white;
+}
