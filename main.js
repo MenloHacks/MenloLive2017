@@ -110,7 +110,7 @@ $( function() {
                 var parsed_start = Date.parse(results[i]["start_time"]);
                 var weekday = weekdays[new Date(parsed_start).getDay()];
                 if (weekday != old_weekday){
-                    event_list.append("<tr><td colspan='3' style='background-color:#7D5BA6 ' '>" + weekday + "</td></tr>");
+                    event_list.append("<tr><td colspan='3' style='background-color:#7D5BA6; color: white' '>" + weekday + "</td></tr>");
                     old_weekday = weekday;
                 }
 

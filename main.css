@@ -7,7 +7,7 @@ body {
 #countdown p{
     text-align: center;
     font-size: 5em;
-    color: #595959;
+    color: white;
 }
 #countdown .countdown-info {
     font-size: 2em;
@@ -54,6 +54,10 @@ Comment
     -o-filter: blur(15px);
     -ms-filter: blur(15px);
     filter: blur(15px);
+
+    -moz-transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
 }
 
 .event-ongoing {
