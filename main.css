@@ -25,7 +25,10 @@ h1, h2, h3 {
 
 .white {
     background-color: white;
+    height: 30em;
+    overflow-y: scroll;
 }
+
 /*
 Comment
  */

@@ -10,8 +10,8 @@ $( function() {
     setInterval(function() {
         var now = new Date(Date.now());
         if (now < hacking_start){
-            until_hacking_end.text("Hacking Hasn't Started");
-            $(".countdown-info").text("");
+            until_hacking_end.text(formatDate(hacking_start - new Date(Date.now())));
+            $(".countdown-info").text("Until hacking begins");
         } else if (now < hacking_end && now > hacking_start) {
             until_hacking_end.text(formatDate(hacking_end - new Date(Date.now())));
         } else {
@@ -91,17 +91,35 @@ $( function() {
     $.get("https://api.menlohacks.com/events", function(data) {
         loadResults(data["data"]);
     });
-
+    var weekdays = new Array(7);
+    weekdays['0'] = "Sunday";
+    weekdays['1'] = "Monday";
+    weekdays['2'] = "Tuesday";
+    weekdays['3'] = "Wednesday";
+    weekdays['4'] = "Thursday";
+    weekdays['5'] = "Friday";
+    weekdays['6'] = "Saturday";
+    var event_list = $("#eventList");
     function loadResults(results) {
         var now = Date.now();
+        var old_weekday = "";
         for(var i in results) {
-            if(now < Date.parse(results[i]["end_time"]) + 3600000) {
+            var parsed_end = Date.parse(results[i]["end_time"]);
+            if(now < parsed_end + 3600000) {
+                console.log(i);
+                var parsed_start = Date.parse(results[i]["start_time"]);
+                var weekday = weekdays[new Date(parsed_start).getDay()];
+                if (weekday != old_weekday){
+                    event_list.append("<tr><td colspan='3' style='background-color:#7D5BA6 ' '>" + weekday + "</td></tr>");
+                    old_weekday = weekday;
+                }
+
                 var ongoing;
-                if(now > Date.parse(results[i]["start_time"]) && now < Date.parse(results[i]["end_time"]))
+                if(now > parsed_start && now < parsed_end)
                     ongoing = "event-ongoing";
                 else
                     ongoing = "";
-                $("#eventList").append(
+                event_list.append(
                     "<tr class=\" event " + ongoing + "\" data-toggle=\"modal\" data-target=\"#myModal\" data-desc=\""
                     + results[i]["long_description"] + "\" data-map=\"" + results[i]["location"]["map"] + "\" data-title=\""
                     + results[i]["short_description"] + "\">" +
