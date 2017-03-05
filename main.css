@@ -120,3 +120,12 @@ ul .ui-tabs-nav {
 .closed-ticket {
     background-color: lightgray;
 }
+
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+    background-color: #7D5BA6;
+    border-color: #7d2da6;
+}
+
+#logout-li {
+    float: right;
+}

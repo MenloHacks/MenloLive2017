@@ -187,18 +187,8 @@ $( function() {
 
     var your_tickets = $("#your-tickets");
 
-    if ($.cookie("token")) {
-        $.ajax({
-            url: "https://api.menlohacks.com/mentorship/user/queue",
-            contentType: 'application/json; charset=utf-8',
-            headers: {
-                "X-MenloHacks-Authorization": $.cookie("token")
-            },
-            type: "GET",
-            success: function(data) {
-                loadYourTickets(data["data"]);
-            }
-        });
+    if ($.cookie("token") && $.cookie("token") != "null") {
+        firstLogin();
     }
 
     function loadYourTickets(results) {
@@ -263,19 +253,6 @@ $( function() {
 
     var claimed_tickets = $("#claimed-tickets");
 
-    if ($.cookie("token")) {
-        $.ajax({
-            url: "https://api.menlohacks.com/mentorship/user/claimed",
-            contentType: 'application/json; charset=utf-8',
-            headers: {
-                "X-MenloHacks-Authorization": $.cookie("token")
-            },
-            type: "GET",
-            success: function(data) {
-                loadClaimedTickets(data["data"]);
-            }
-        });
-    }
 
     function loadClaimedTickets(results) {
         claimed_tickets.find("tr").remove();
@@ -335,6 +312,11 @@ $( function() {
                            timer: 2000
                        });
                        // Refresh your tickets.
+                   },
+                   error:  function (data) {
+                       handleErrors(data, function () {
+                           
+                       })
                    }
                })
            });
@@ -342,6 +324,7 @@ $( function() {
     });
 
     $(".login").click(function () {
+        console.log("test");
        authorizeUser(function () {})
     });
 
@@ -387,7 +370,7 @@ $( function() {
     }
 
     function authorizeUser(callback) {
-        if ($.cookie("token")){
+        if ($.cookie("token") && $.cookie("token") != "null"){
             callback();
         } else {
             swal({
@@ -405,7 +388,9 @@ $( function() {
                 },
                 onOpen: function () {
                     $('#email').focus()
-                }
+                },
+                showCancelButton: true,
+                confirmButtonText: "Log in"
             }).then(function (result) {
                 $.ajax({
                     url: "https://api.menlohacks.com/user/login",
@@ -430,31 +415,7 @@ $( function() {
                         }, function() {
                             callback();
                         });
-                        $.ajax({
-                            url: "https://api.menlohacks.com/mentorship/user/queue",
-                            contentType: 'application/json; charset=utf-8',
-                            headers: {
-                                "X-MenloHacks-Authorization": $.cookie("token")
-                            },
-                            type: "GET",
-                            success: function(data) {
-                                your_tickets.find("tr").remove();
-                                loadYourTickets(data["data"]);
-                            }
-                        });
-                        $.ajax({
-                            url: "https://api.menlohacks.com/mentorship/user/claimed",
-                            contentType: 'application/json; charset=utf-8',
-                            headers: {
-                                "X-MenloHacks-Authorization": $.cookie("token")
-                            },
-                            type: "GET",
-                            success: function(data) {
-                                claimed_tickets.find("tr").remove();
-                                loadClaimedTickets(data["data"]);
-
-                            }
-                        });
+                        firstLogin();
                     },
                     type: "POST"
                 });
@@ -559,6 +520,50 @@ $( function() {
                 swal("Successfully closed ticket", "You can reopen the ticket if you created it in your tickets section.", "success");
             }
         });
+    }
+
+    $("#tab-list").on("click", "#logout", function() {
+        $.cookie("token", null);
+        swal({
+            title: "Logged out",
+            text: "See you later!",
+            type: "success",
+            timer: 2000
+        }).then(function() {
+            location.reload();
+        }, function () {
+            location.reload();
+        });
+    });
+
+
+    function firstLogin() {
+        $.ajax({
+            url: "https://api.menlohacks.com/mentorship/user/queue",
+            contentType: 'application/json; charset=utf-8',
+            headers: {
+                "X-MenloHacks-Authorization": $.cookie("token")
+            },
+            type: "GET",
+            success: function(data) {
+                your_tickets.find("tr").remove();
+                loadYourTickets(data["data"]);
+            }
+        });
+        $.ajax({
+            url: "https://api.menlohacks.com/mentorship/user/claimed",
+            contentType: 'application/json; charset=utf-8',
+            headers: {
+                "X-MenloHacks-Authorization": $.cookie("token")
+            },
+            type: "GET",
+            success: function(data) {
+                claimed_tickets.find("tr").remove();
+                loadClaimedTickets(data["data"]);
+
+            }
+        });
+        $("#tab-list").append("<li id='logout-li'><button id='logout' class='btn'>Logout</button></li>");
     }
 
 
