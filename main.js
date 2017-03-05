@@ -456,23 +456,25 @@ $( function() {
         });
     });
     $("#your-tickets, #claimed-tickets").on("click", ".close-ticket", function () {
-        var element = $(this);
-        authorizeUser(function () {
-            var id = element.parent().parent().attr("data-id");
-            if ($(this).hasClass("btn-danger")) {
-                swal({
-                    title: "Your ticket has already been claimed",
-                    text: "You can still close it, but the mentor may already be trying to find you.",
-                    type: "warning",
-                    showCancelButton: true
-                }).then(function() {
-                    closeTicket(id);
-                });
-            }
-            else {
-                closeTicket(id);
+        var id = $(this).parent().parent().attr("data-id");
+        $.ajax({
+            url: "https://api.menlohacks.com/mentorship/close",
+            contentType: 'application/json; charset=utf-8',
+            headers: {
+                "X-MenloHacks-Authorization": $.cookie("token")
+            },
+            data : JSON.stringify({
+                id: id
+            }),
+            type: "POST",
+            error: function(data) {
+                handleErrors(data, function () {})
+            },
+            success: function() {
+                swal("Successfully closed ticket", "You can reopen the ticket if you created it in your tickets section.", "success");
             }
         });
+
     });
     your_tickets.on("click", ".reopen-ticket", function () {
         var element = $(this);
@@ -499,28 +501,6 @@ $( function() {
         });
     });
 
-
-
-
-    function closeTicket(id) {
-        $.ajax({
-            url: "https://api.menlohacks.com/mentorship/close",
-            contentType: 'application/json; charset=utf-8',
-            headers: {
-                "X-MenloHacks-Authorization": $.cookie("token")
-            },
-            data : JSON.stringify({
-                id: id
-            }),
-            type: "POST",
-            error: function(data) {
-                handleErrors(data, function () {})
-            },
-            success: function() {
-                swal("Successfully closed ticket", "You can reopen the ticket if you created it in your tickets section.", "success");
-            }
-        });
-    }
 
     $("#tab-list").on("click", "#logout", function() {
         $.cookie("token", null);
