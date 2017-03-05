@@ -346,7 +346,7 @@ $( function() {
             open_tickets.find("tr").remove();
             loadOpenTickets(data["data"]);
         });
-        if ($.cookie("token")) {
+        if ($.cookie("token") && $.cookie("token") != "null") {
             $.ajax({
                 url: "https://api.menlohacks.com/mentorship/user/queue",
                 contentType: 'application/json; charset=utf-8',
