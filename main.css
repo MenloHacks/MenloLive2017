@@ -129,3 +129,6 @@ ul .ui-tabs-nav {
 #logout-li {
     float: right;
 }
+body {
+    overflow-x: hidden;
+}
