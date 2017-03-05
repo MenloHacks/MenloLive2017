@@ -9,6 +9,9 @@ body {
     font-size: 5em;
     color: white;
 }
+.section p {
+    font-size: 100px;
+}
 #countdown .countdown-info {
     font-size: 2em;
 }
@@ -25,7 +28,7 @@ h1, h2, h3 {
 
 .white {
     background-color: white;
-    height: 30em;
+    max-height: 30em;
     overflow-y: scroll;
 }
 
@@ -67,4 +70,53 @@ Comment
 
 .event-ongoing a {
     color: white;
+}
+
+.ui-widget.ui-widget-content {
+    border: 0 !important;
+}
+.ui-widget-content {
+    background: transparent !important;
+}
+
+.ui-widget-header {
+    border: 1px solid transparent !important;
+    background: transparent !important;
+}
+
+.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+    border-radius: 3px;
+}
+
+ul .ui-tabs-nav {
+    position: fixed !important;
+    z-index: 1000;
+}
+
+#tickets {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+#tickets h2, #tickets button {
+    display: inline;
+}
+
+#tickets button {
+    float: right;
+}
+
+.open-ticket {
+    background-color: lightblue;
+}
+
+.in-progress-ticket {
+    background-color: lightgreen;
+}
+
+.expired-ticket {
+    background-color: lightcoral;
+}
+
+.closed-ticket {
+    background-color: lightgray;
 }

@@ -1,5 +1,9 @@
 $( function() {
 
+    var token = $.cookie("token");
+
+    $('#tabs').tabs();
+
     var until_hacking_end = $("#until-hacking-end");
     var hacking_end;
     var hacking_start;
@@ -34,7 +38,6 @@ $( function() {
     $.get("https://api.menlohacks.com/announcements", function(data) {
         loadAnnouncements(data["data"]);
     });
-
     function loadAnnouncements(results) {
         for(var i in results) {
             $("#announcementList").append(
@@ -52,17 +55,17 @@ $( function() {
 
     var announcements_channel = pusher.subscribe('com.vivere.announcement.update');
     announcements_channel.bind('save', function(data) {
-        $.get("https://api.menlohacks.com/announcements", function(data) {
-            console.log("test");
-            $("#announcementList").find("tr:gt(0)").remove();
-            loadAnnouncements(data["data"]);
-        });
+        $("#announcementList").prepend(
+            "<tr><td>" + data["message"] + "</td>" +
+            "<td>" + isoToHumanString(data["time"]) + "</td></tr>"
+        );
     });
 
     var events_channel = pusher.subscribe('com.vivere.event.update');
     events_channel.bind('save', function(data) {
+        var old_date = $("#announcementList");
         $.get("https://api.menlohacks.com/events", function(data) {
-            $("#eventList").find("tr:gt(0)").remove();
+            event_list.find("tr").remove();
             loadResults(data["data"]);
         });
     });
@@ -72,7 +75,6 @@ $( function() {
         var hours = dt.getHours();
         var minutes = dt.getMinutes();
         var ampm = "AM";
-        console.log(hours + " " + minutes);
 
         if (hours >= 12) {
             ampm = "PM";
@@ -106,7 +108,6 @@ $( function() {
         for(var i in results) {
             var parsed_end = Date.parse(results[i]["end_time"]);
             if(now < parsed_end + 3600000) {
-                console.log(i);
                 var parsed_start = Date.parse(results[i]["start_time"]);
                 var weekday = weekdays[new Date(parsed_start).getDay()];
                 if (weekday != old_weekday){
@@ -115,8 +116,9 @@ $( function() {
                 }
 
                 var ongoing;
-                if(now > parsed_start && now < parsed_end)
+                if(now > parsed_start && now < parsed_end) {
                     ongoing = "event-ongoing";
+                }
                 else
                     ongoing = "";
                 event_list.append(
@@ -145,14 +147,12 @@ $( function() {
     $.get("https://api.menlohacks.com/maps", function(data) {
         addMaps(data["data"]);
     });
-    //comment
+    // Maps
     function addMaps(maps) {
         for(var i in maps) {
             $("#mapList").append(
-                "<button class=\" event button \" data-toggle=\"modal\" data-target=\"#myModal\" data-map=\"" +
-                maps[i]["map"] + "\" data-title=\"" + maps[i]["name"] + "\">" +
-                maps[i]["name"] +
-                "</button>");
+                "<h3>" + maps[i]["name"] + "</h3>" +
+            "<img src='"+ maps[i]["map"] + "' class='img-responsive center-block'>");
         }
         $(".event").click(function(e) {
             $("#myModalLabel").html(e.currentTarget.getAttribute("data-title"));
@@ -160,38 +160,406 @@ $( function() {
         });
     }
 
+    var open_tickets = $("#open-tickets");
+
+    $.get("https://api.menlohacks.com/mentorship/queue", function(data) {
+        loadOpenTickets(data["data"]);
+    });
+
+    function loadOpenTickets(results) {
+        if (results.length == 0) {
+            open_tickets.append("<tr><td colspan='5' class='text-center'>There are no open tickets.</td></tr>")
+        }
+        else {
+            for(var i in results) {
+                var result = results[i];
+                open_tickets.append(
+                    "<tr data-id='" + result["id"] + "'>" +
+                    "<td>" + result["description"] +  "</td>" +
+                    "<td>" + result["contact"] + "</td>" +
+                    "<td>" + result["location"] + "</td>" +
+                    "<td>" + isoToHumanString(result["time_created"]) + "</td>" +
+                    "<td><button class='claim-ticket btn'>Claim</button></td>" +
+                    "</tr>");
+            }
+        }
+    }
+
+    var your_tickets = $("#your-tickets");
+
+    if ($.cookie("token")) {
+        $.ajax({
+            url: "https://api.menlohacks.com/mentorship/user/queue",
+            contentType: 'application/json; charset=utf-8',
+            headers: {
+                "X-MenloHacks-Authorization": $.cookie("token")
+            },
+            type: "GET",
+            success: function(data) {
+                loadYourTickets(data["data"]);
+            }
+        });
+    }
+
+    function loadYourTickets(results) {
+        your_tickets.find("tr").remove();
+        var open = results["open"];
+        for(var i in open) {
+            var result = open[i];
+            your_tickets.append(
+                "<tr data-id='" + result["id"] + "' class='open-ticket'>" +
+                "<td>" + result["description"] +  "</td>" +
+                "<td>" + result["contact"] + "</td>" +
+                "<td>" + result["location"] + "</td>" +
+                "<td>" + isoToHumanString(result["time_created"]) + "</td>" +
+                "<td>Open</td>" +
+                "<td><button class='btn btn-warning close-ticket'>Close</button></td>" +
+                "</tr>");
+        }
+        var in_progress = results["in_progress"];
+        for(i in in_progress) {
+            result = in_progress[i];
+            your_tickets.append(
+                "<tr data-id='" + result["id"] + "' class='in-progress-ticket'>" +
+                "<td>" + result["description"] +  "</td>" +
+                "<td>" + result["contact"] + "</td>" +
+                "<td>" + result["location"] + "</td>" +
+                "<td>" + isoToHumanString(result["time_created"]) + "</td>" +
+                "<td>In Progress</td>" +
+                "<td><button class='btn btn-danger close-ticket'>Close</button></td>" +
+                "</tr>");
+        }
+        var expired = results["expired"];
+        for(i in expired) {
+            result = expired[i];
+            console.log();
+            your_tickets.append(
+                "<tr data-id='" + result["id"] + "' class='expired-ticket'>" +
+                "<td>" + result["description"] +  "</td>" +
+                "<td>" + result["contact"] + "</td>" +
+                "<td>" + result["location"] + "</td>" +
+                "<td>" + isoToHumanString(result["time_created"]) + "</td>" +
+                "<td>Expired</td>" +
+                "<td><button class='btn btn-warning reopen-ticket'>Reopen</button></td>" +
+                "</tr>");
+        }
+        var closed = results["closed"];
+        for(i in results["closed"]) {
+            result = closed[i];
+            your_tickets.append(
+                "<tr data-id='" + result["id"] + "' class='closed-ticket'>" +
+                "<td>" + result["description"] +  "</td>" +
+                "<td>" + result["contact"] + "</td>" +
+                "<td>" + result["location"] + "</td>" +
+                "<td>" + isoToHumanString(result["time_created"]) + "</td>" +
+                "<td>Closed</td>" +
+                "<td><button class='btn btn-warning reopen-ticket'>Reopen</button></td>" +
+                "</tr>");
+        }
+        if (open.length == 0 && in_progress.length == 0 && expired.length == 0 && closed.length==0) {
+            your_tickets.append("<tr><td colspan='6' class='text-center'>You don't have any tickets</td>")
+        }
+    }
+
+    var claimed_tickets = $("#claimed-tickets");
+
+    if ($.cookie("token")) {
+        $.ajax({
+            url: "https://api.menlohacks.com/mentorship/user/claimed",
+            contentType: 'application/json; charset=utf-8',
+            headers: {
+                "X-MenloHacks-Authorization": $.cookie("token")
+            },
+            type: "GET",
+            success: function(data) {
+                loadClaimedTickets(data["data"]);
+            }
+        });
+    }
+
+    function loadClaimedTickets(results) {
+        claimed_tickets.find("tr").remove();
+        for(var i in results) {
+            var result = results[i];
+            claimed_tickets.append(
+                "<tr data-id='" + result["id"] + "'>" +
+                "<td>" + result["description"] +  "</td>" +
+                "<td>" + result["contact"] + "</td>" +
+                "<td>" + result["location"] + "</td>" +
+                "<td>" + isoToHumanString(result["time_created"]) + "</td>" +
+                "<td><button class='btn btn-warning close-ticket'>Close</button></td>" +
+                "</tr>");
+        }
+        if (results.length == 0) {
+            claimed_tickets.append("<tr><td colspan='6' class='text-center'>You have not claimed any tickets.</td>")
+        }
+    }
+
+    $("#new-ticket").click(function () {
+       authorizeUser(function() {
+           swal({
+               title: 'Create a Ticket',
+               html:
+               'Description:<input id="description" class="swal2-input" placeholder="Describe your issue">' +
+               'Location:<input id="location" class="swal2-input" placeholder="Where are you?">' +
+               'Contact:<input id="contact" class="swal2-input" placeholder="email, phone number, etc.">',
+               preConfirm: function () {
+                   return new Promise(function (resolve) {
+                       resolve([
+                           $('#description').val(),
+                           $('#location').val(),
+                           $('#contact').val()
+                       ])
+                   });
+               },
+               onOpen: function () {
+                   $('#description').focus();
+               }
+           }).then (function (data) {
+               $.ajax({
+                   url: "https://api.menlohacks.com/mentorship/create",
+                   headers: {
+                       "X-MenloHacks-Authorization": $.cookie("token")
+                   },
+                   contentType: 'application/json; charset=utf-8',
+                   data: JSON.stringify({
+                       description: data[0],
+                       location: data[1],
+                       contact: data[2]
+                   }),
+                   type: "POST",
+                   success: function() {
+                       swal({
+                           title: "Successfully created ticket!",
+                           type: "success",
+                           timer: 2000
+                       });
+                       // Refresh your tickets.
+                   }
+               })
+           });
+       });
+    });
+
+    $(".login").click(function () {
+       authorizeUser(function () {})
+    });
+
+    var ticket_updates = pusher.subscribe("com.vivere.mentor.update");
+    ticket_updates.bind("save", function (data) {
+        updateTickets();
+    });
+
+
+    function updateTickets() {
+
+        //Open tickets
+        $.get("https://api.menlohacks.com/mentorship/queue", function(data) {
+            open_tickets.find("tr").remove();
+            loadOpenTickets(data["data"]);
+        });
+        if ($.cookie("token")) {
+            $.ajax({
+                url: "https://api.menlohacks.com/mentorship/user/queue",
+                contentType: 'application/json; charset=utf-8',
+                headers: {
+                    "X-MenloHacks-Authorization": $.cookie("token")
+                },
+                type: "GET",
+                success: function(data) {
+                    your_tickets.find("tr").remove();
+                    loadYourTickets(data["data"]);
+                }
+            });
+            $.ajax({
+                url: "https://api.menlohacks.com/mentorship/user/claimed",
+                contentType: 'application/json; charset=utf-8',
+                headers: {
+                    "X-MenloHacks-Authorization": $.cookie("token")
+                },
+                type: "GET",
+                success: function(data) {
+                    claimed_tickets.find("tr").remove();
+                    loadClaimedTickets(data["data"]);
+                }
+            });
+        }
+    }
+
+    function authorizeUser(callback) {
+        if ($.cookie("token")){
+            callback();
+        } else {
+            swal({
+                title: 'Log in',
+                html:
+                'Email:<input id="email" class="swal2-input">' +
+                'Password:<input  type="password" id="password" class="swal2-input">',
+                preConfirm: function () {
+                    return new Promise(function (resolve) {
+                        resolve([
+                            $('#email').val(),
+                            $('#password').val()
+                        ])
+                    });
+                },
+                onOpen: function () {
+                    $('#email').focus()
+                }
+            }).then(function (result) {
+                $.ajax({
+                    url: "https://api.menlohacks.com/user/login",
+                    data: JSON.stringify({
+                        "username": result[0],
+                        "password": result[1]
+                    }),
+                    contentType: 'application/json; charset=utf-8',
+                    error: function (data) {
+                        handleErrors(data, function () {
+                            authorizeUser();
+                        });
+                    },
+                    success: function(data) {
+                        $.cookie("token", data["data"]["token"]);
+                        swal({
+                            title: "Logged in.",
+                            type: "success",
+                            timer: 2000
+                        }).then(function() {
+                            callback();
+                        }, function() {
+                            callback();
+                        });
+                        $.ajax({
+                            url: "https://api.menlohacks.com/mentorship/user/queue",
+                            contentType: 'application/json; charset=utf-8',
+                            headers: {
+                                "X-MenloHacks-Authorization": $.cookie("token")
+                            },
+                            type: "GET",
+                            success: function(data) {
+                                your_tickets.find("tr").remove();
+                                loadYourTickets(data["data"]);
+                            }
+                        });
+                        $.ajax({
+                            url: "https://api.menlohacks.com/mentorship/user/claimed",
+                            contentType: 'application/json; charset=utf-8',
+                            headers: {
+                                "X-MenloHacks-Authorization": $.cookie("token")
+                            },
+                            type: "GET",
+                            success: function(data) {
+                                claimed_tickets.find("tr").remove();
+                                loadClaimedTickets(data["data"]);
+
+                            }
+                        });
+                    },
+                    type: "POST"
+                });
+            }).catch(swal.noop);
+        }
+    }
+
+    function handleErrors(data, callback) {
+        var error = JSON.parse(data["responseText"])["error"];
+        swal(error["title"], error["message"], "error").then(function () {
+            callback();
+        });
+    }
+
+
+
+    open_tickets.on("click", ".claim-ticket", function() {
+        var element = $(this);
+        authorizeUser(function () {
+            var id = element.parent().parent().attr("data-id");
+            $.ajax({
+                url: "https://api.menlohacks.com/mentorship/claim",
+                contentType: 'application/json; charset=utf-8',
+                headers: {
+                    "X-MenloHacks-Authorization": $.cookie("token")
+                },
+                data : JSON.stringify({
+                    id: id
+                }),
+                type: "POST",
+                error: function(data) {
+                    handleErrors(data, function () {})
+                },
+                success: function() {
+                    swal("Successfully claimed ticket", "Best of luck solving the issue", "success");
+                }
+            });
+        });
+    });
+    $("#your-tickets, #claimed-tickets").on("click", ".close-ticket", function () {
+        var element = $(this);
+        authorizeUser(function () {
+            var id = element.parent().parent().attr("data-id");
+            if ($(this).hasClass("btn-danger")) {
+                swal({
+                    title: "Your ticket has already been claimed",
+                    text: "You can still close it, but the mentor may already be trying to find you.",
+                    type: "warning",
+                    showCancelButton: true
+                }).then(function() {
+                    closeTicket(id);
+                });
+            }
+            else {
+                closeTicket(id);
+            }
+        });
+    });
+    your_tickets.on("click", ".reopen-ticket", function () {
+        var element = $(this);
+        authorizeUser(function () {
+            var id = element.parent().parent().attr("data-id");
+            console.log("id" +  id);
+            $.ajax({
+                url: "https://api.menlohacks.com/mentorship/reopen",
+                contentType: 'application/json; charset=utf-8',
+                headers: {
+                    "X-MenloHacks-Authorization": $.cookie("token")
+                },
+                data : JSON.stringify({
+                    id: id
+                }),
+                type: "POST",
+                error: function(data) {
+                    handleErrors(data, function () {});
+                },
+                success: function() {
+                    swal("Successfully reopened ticket", "It can now be claimed by a mentor", "success");
+                }
+            });
+        });
+    });
+
+
+
+
+    function closeTicket(id) {
+        $.ajax({
+            url: "https://api.menlohacks.com/mentorship/close",
+            contentType: 'application/json; charset=utf-8',
+            headers: {
+                "X-MenloHacks-Authorization": $.cookie("token")
+            },
+            data : JSON.stringify({
+                id: id
+            }),
+            type: "POST",
+            error: function(data) {
+                handleErrors(data, function () {})
+            },
+            success: function() {
+                swal("Successfully closed ticket", "You can reopen the ticket if you created it in your tickets section.", "success");
+            }
+        });
+    }
+
+
 });
-
-
-
-// setTimeout(function () {
-//     location.reload();
-// }, 30000);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-
-
-
-
-
-
-
-/*
-John's old code, in case you ever need it.
- */
