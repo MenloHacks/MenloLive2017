@@ -333,6 +333,11 @@ $( function() {
         updateTickets();
     });
 
+    ticket_updates.bind("expire", function (data) {
+        updateTickets();
+    });
+
+
 
     function updateTickets() {
 
