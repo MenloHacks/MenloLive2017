@@ -47,28 +47,7 @@ $( function() {
         }
     }
 
-    Pusher.logToConsole = true;
 
-    var pusher = new Pusher('243035ed0c201ba987a5', {
-        encrypted: true
-    });
-
-    var announcements_channel = pusher.subscribe('com.vivere.announcement.update');
-    announcements_channel.bind('save', function(data) {
-        $("#announcementList").prepend(
-            "<tr><td>" + data["message"] + "</td>" +
-            "<td>" + isoToHumanString(data["time"]) + "</td></tr>"
-        );
-    });
-
-    var events_channel = pusher.subscribe('com.vivere.event.update');
-    events_channel.bind('save', function(data) {
-        var old_date = $("#announcementList");
-        $.get("https://api.menlohacks.com/events", function(data) {
-            event_list.find("tr").remove();
-            loadResults(data["data"]);
-        });
-    });
 
     function isoToHumanString(isoTime) {
         var dt = new Date(isoTime);
@@ -264,7 +243,7 @@ $( function() {
                 "<td>" + result["contact"] + "</td>" +
                 "<td>" + result["location"] + "</td>" +
                 "<td>" + isoToHumanString(result["time_created"]) + "</td>" +
-                "<td><button class='btn btn-warning close-ticket'>Close</button></td>" +
+                "<td><button class='btn btn-warning close-ticket'>Close</button><button class='btn btn-warning reopen-ticket'>Reopen</button></td>" +
                 "</tr>");
         }
         if (results.length == 0) {
@@ -328,14 +307,6 @@ $( function() {
        authorizeUser(function () {})
     });
 
-    var ticket_updates = pusher.subscribe("com.vivere.mentor.update");
-    ticket_updates.bind("save", function (data) {
-        updateTickets();
-    });
-
-    ticket_updates.bind("expire", function (data) {
-        updateTickets();
-    });
 
 
 
@@ -460,7 +431,8 @@ $( function() {
             });
         });
     });
-    $("#your-tickets, #claimed-tickets").on("click", ".close-ticket", function () {
+    var your_and_claimed = $("#your-tickets, #claimed-tickets");
+    your_and_claimed.on("click", ".close-ticket", function () {
         var id = $(this).parent().parent().attr("data-id");
         $.ajax({
             url: "https://api.menlohacks.com/mentorship/close",
@@ -481,7 +453,7 @@ $( function() {
         });
 
     });
-    your_tickets.on("click", ".reopen-ticket", function () {
+    your_and_claimed.on("click", ".reopen-ticket", function () {
         var element = $(this);
         authorizeUser(function () {
             var id = element.parent().parent().attr("data-id");
@@ -550,6 +522,36 @@ $( function() {
         });
         $("#tab-list").append("<li id='logout-li'><button id='logout' class='btn'>Logout</button></li>");
     }
+
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('243035ed0c201ba987a5', {
+        encrypted: true
+    });
+
+    var announcements_channel = pusher.subscribe('com.vivere.announcement.update');
+    announcements_channel.bind('save', function(data) {
+        $("#announcementList").prepend(
+            "<tr><td>" + data["message"] + "</td>" +
+            "<td>" + isoToHumanString(data["time"]) + "</td></tr>"
+        );
+    });
+
+    var events_channel = pusher.subscribe('com.vivere.event.update');
+    events_channel.bind('save', function(data) {
+        $.get("https://api.menlohacks.com/events", function(data) {
+            event_list.find("tr").remove();
+            loadResults(data["data"]);
+        });
+    });
+    var ticket_updates = pusher.subscribe("com.vivere.mentor.update");
+    ticket_updates.bind("save", function (data) {
+        updateTickets();
+    });
+
+    ticket_updates.bind("expire", function (data) {
+        updateTickets();
+    });
 
 
 });
