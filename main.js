@@ -243,7 +243,7 @@ $( function() {
                 "<td>" + result["contact"] + "</td>" +
                 "<td>" + result["location"] + "</td>" +
                 "<td>" + isoToHumanString(result["time_created"]) + "</td>" +
-                "<td><button class='btn btn-warning close-ticket'>Close</button><button class='btn btn-warning reopen-ticket'>Reopen</button></td>" +
+                "<td><button class='btn btn-warning close-ticket'>Close</button><button class='btn btn-warning reopen-ticket' style='margin-left: 10px;'>Reopen</button></td>" +
                 "</tr>");
         }
         if (results.length == 0) {
@@ -327,7 +327,7 @@ $( function() {
                 type: "GET",
                 success: function(data) {
                     your_tickets.find("tr").remove();
-                    loadYourTickets(data["data"]);
+                    loadYourTickets(data["data"]["tickets"]);
                 }
             });
             $.ajax({
@@ -504,7 +504,7 @@ $( function() {
             type: "GET",
             success: function(data) {
                 your_tickets.find("tr").remove();
-                loadYourTickets(data["data"]);
+                loadYourTickets(data["data"]["tickets"]);
             }
         });
         $.ajax({
