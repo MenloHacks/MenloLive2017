@@ -10,18 +10,18 @@ $( function() {
     $.get("https://api.menlohacks.com/times", function(data) {
         hacking_end = new Date(data["data"]["hacking_end_time"]);
         hacking_start = new Date(data["data"]["hacking_start_time"]);
+        setInterval(function() {
+            var now = new Date(Date.now());
+            if (now < hacking_start){
+                until_hacking_end.text(formatDate(hacking_start - new Date(Date.now())));
+                $(".countdown-info").text("Until hacking begins");
+            } else if (now < hacking_end && now > hacking_start) {
+                until_hacking_end.text(formatDate(hacking_end - new Date(Date.now())));
+            } else {
+                until_hacking_end.text("Hacking Is Now Over");
+            }
+        }, 1000);
     });
-    setInterval(function() {
-        var now = new Date(Date.now());
-        if (now < hacking_start){
-            until_hacking_end.text(formatDate(hacking_start - new Date(Date.now())));
-            $(".countdown-info").text("Until hacking begins");
-        } else if (now < hacking_end && now > hacking_start) {
-            until_hacking_end.text(formatDate(hacking_end - new Date(Date.now())));
-        } else {
-            until_hacking_end.text("Hacking Is Now Over");
-        }
-    }, 1000);
     function formatDate(date) {
         var hour = Math.floor(date/1000/60/60);
         var minute = Math.floor(date%(hour*1000*60*60)/1000/60);
