@@ -1,12 +1,38 @@
 $( function() {
 
     var token = $.cookie("token");
-
-    $('#tabs').tabs();
-
+    var tab_list = $("#tab-list");
+    var claimed_tickets = $("#claimed-tickets");
+    var weekdays = new Array(7);
+    weekdays['0'] = "Sunday";
+    weekdays['1'] = "Monday";
+    weekdays['2'] = "Tuesday";
+    weekdays['3'] = "Wednesday";
+    weekdays['4'] = "Thursday";
+    weekdays['5'] = "Friday";
+    weekdays['6'] = "Saturday";
+    var event_list = $("#eventList");
     var until_hacking_end = $("#until-hacking-end");
     var hacking_end;
     var hacking_start;
+    var open_tickets = $("#open-tickets");
+    var your_tickets = $("#your-tickets");
+    var your_and_claimed = $("#your-tickets, #claimed-tickets");
+    var pusher = new Pusher('243035ed0c201ba987a5', {
+        encrypted: true
+    });
+
+    var announcements_channel = pusher.subscribe('com.vivere.announcement.update');
+    var events_channel = pusher.subscribe('com.vivere.event.update');
+    var ticket_updates = pusher.subscribe("com.vivere.mentor.update");
+
+
+
+
+
+
+
+    $('#tabs').tabs();
     $.get("https://api.menlohacks.com/times", function(data) {
         hacking_end = new Date(data["data"]["hacking_end_time"]);
         hacking_start = new Date(data["data"]["hacking_start_time"]);
@@ -72,15 +98,6 @@ $( function() {
     $.get("https://api.menlohacks.com/events", function(data) {
         loadResults(data["data"]);
     });
-    var weekdays = new Array(7);
-    weekdays['0'] = "Sunday";
-    weekdays['1'] = "Monday";
-    weekdays['2'] = "Tuesday";
-    weekdays['3'] = "Wednesday";
-    weekdays['4'] = "Thursday";
-    weekdays['5'] = "Friday";
-    weekdays['6'] = "Saturday";
-    var event_list = $("#eventList");
     function loadResults(results) {
         var now = Date.now();
         var old_weekday = "";
@@ -139,7 +156,6 @@ $( function() {
         });
     }
 
-    var open_tickets = $("#open-tickets");
 
     $.get("https://api.menlohacks.com/mentorship/queue", function(data) {
         loadOpenTickets(data["data"]);
@@ -163,8 +179,6 @@ $( function() {
             }
         }
     }
-
-    var your_tickets = $("#your-tickets");
 
     if ($.cookie("token") && $.cookie("token") != "null") {
         firstLogin();
@@ -230,7 +244,6 @@ $( function() {
         }
     }
 
-    var claimed_tickets = $("#claimed-tickets");
 
 
     function loadClaimedTickets(results) {
@@ -290,7 +303,6 @@ $( function() {
                            type: "success",
                            timer: 2000
                        });
-                       // Refresh your tickets.
                    },
                    error:  function (data) {
                        handleErrors(data, function () {
@@ -303,9 +315,59 @@ $( function() {
     });
 
     $(".login").click(function () {
-        console.log("test");
        authorizeUser(function () {})
     });
+
+    tab_list.on("click", "#create-account", function() {
+        addUser();
+    });
+
+    function addUser() {
+        swal({
+            title: 'Create Mentor Account',
+            html:
+            'Full Name:<input id="name" class="swal2-input">' +
+            'Email:<input id="email" class="swal2-input">' +
+            'Password:<input  type="password" id="password" class="swal2-input">',
+            preConfirm: function () {
+                return new Promise(function (resolve) {
+                    resolve([
+                        $('#name').val(),
+                        $('#email').val(),
+                        $('#password').val()
+                    ])
+                });
+            },
+            onOpen: function () {
+                $('#name').focus()
+            },
+            showCancelButton: true,
+            confirmButtonText: "Create Account"
+        }).then(function (result) {
+            $.ajax({
+                url: "https://api.menlohacks.com/user/create",
+                data: JSON.stringify({
+                    "name" : result[0],
+                    "username": result[1],
+                    "password": result[2]
+                }),
+                contentType: 'application/json; charset=utf-8',
+                error: function (data) {
+                    handleErrors(data, function () {
+                        addUser();
+                    });
+                },
+                success: function(data) {
+                    swal({
+                        title: "Created Account",
+                        type: "success",
+                        timer: 2000
+                    });
+                },
+                type: "POST"
+            });
+        }).catch(swal.noop);
+    }
 
 
 
@@ -431,7 +493,6 @@ $( function() {
             });
         });
     });
-    var your_and_claimed = $("#your-tickets, #claimed-tickets");
     your_and_claimed.on("click", ".close-ticket", function () {
         var id = $(this).parent().parent().attr("data-id");
         $.ajax({
@@ -478,8 +539,7 @@ $( function() {
         });
     });
 
-
-    $("#tab-list").on("click", "#logout", function() {
+    tab_list.on("click", "#logout", function() {
         $.cookie("token", null);
         swal({
             title: "Logged out",
@@ -520,16 +580,13 @@ $( function() {
 
             }
         });
-        $("#tab-list").append("<li id='logout-li'><button id='logout' class='btn'>Logout</button></li>");
+        tab_list.append("<li id='logout-li'><button id='logout' class='btn'>Logout</button></li>");
+        $("#create-li").remove();
     }
 
     Pusher.logToConsole = true;
 
-    var pusher = new Pusher('243035ed0c201ba987a5', {
-        encrypted: true
-    });
 
-    var announcements_channel = pusher.subscribe('com.vivere.announcement.update');
     announcements_channel.bind('save', function(data) {
         $("#announcementList").prepend(
             "<tr><td>" + data["message"] + "</td>" +
@@ -537,14 +594,12 @@ $( function() {
         );
     });
 
-    var events_channel = pusher.subscribe('com.vivere.event.update');
     events_channel.bind('save', function(data) {
         $.get("https://api.menlohacks.com/events", function(data) {
             event_list.find("tr").remove();
             loadResults(data["data"]);
         });
     });
-    var ticket_updates = pusher.subscribe("com.vivere.mentor.update");
     ticket_updates.bind("save", function (data) {
         updateTickets();
     });

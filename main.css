@@ -126,7 +126,7 @@ ul .ui-tabs-nav {
     border-color: #7d2da6;
 }
 
-#logout-li {
+#logout-li, #create-li {
     float: right;
 }
 body {
