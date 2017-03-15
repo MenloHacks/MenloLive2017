@@ -103,7 +103,7 @@ $( function() {
         var old_weekday = "";
         for(var i in results) {
             var parsed_end = Date.parse(results[i]["end_time"]);
-            if(now < parsed_end + 3600000) {
+            if(now < parsed_end) {
                 var parsed_start = Date.parse(results[i]["start_time"]);
                 var weekday = weekdays[new Date(parsed_start).getDay()];
                 if (weekday != old_weekday){
