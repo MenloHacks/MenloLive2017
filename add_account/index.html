@@ -3,57 +3,56 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.4.3/sweetalert2.min.css" integrity="sha256-Wf3ZlY72J3X62Sm2AQJ5WD3sU21jpioeglpMHF/5w44=" crossorigin="anonymous" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.4.3/sweetalert2.min.js" integrity="sha256-MQVREJ+jiOGqckLgCkyPOq0mBY9Gc6+Pdikse5SOzPo=" crossorigin="anonymous"></script>
-    <script>
-        function addUser() {
-            swal({
-                title: 'Create Mentor Account',
-                html:
-                'Full Name:<input id="name" class="swal2-input">' +
-                'Email:<input id="email" class="swal2-input">' +
-                'Password:<input  type="password" id="password" class="swal2-input">',
-                preConfirm: function () {
-                    return new Promise(function (resolve) {
-                        resolve([
-                            $('#name').val(),
-                            $('#email').val(),
-                            $('#password').val()
-                        ])
-                    });
-                },
-                onOpen: function () {
-                    $('#name').focus()
-                },
-                showCancelButton: true,
-                confirmButtonText: "Create Account"
-            }).then(function (result) {
-                $.ajax({
-                    url: "https://api.menlohacks.com/user/create",
-                    data: JSON.stringify({
-                        "name" : result[0],
-                        "username": result[1],
-                        "password": result[2]
-                    }),
-                    contentType: 'application/json; charset=utf-8',
-                    error: function (data) {
-                        handleErrors(data, function () {
-                            addUser();
-                        });
-                    },
-                    success: function(data) {
-                        swal({
-                            title: "Created Account",
-                            type: "success",
-                            timer: 2000
-                        });
-                    },
-                    type: "POST"
-                });
-            }).catch(swal.noop);
-        }
-        addUser();
-    </script>
 </head>
 <body>
-
+<script>
+    function addUser() {
+        swal({
+            title: 'Create Mentor Account',
+            html:
+            'Full Name:<input id="name" class="swal2-input">' +
+            'Email:<input id="email" class="swal2-input">' +
+            'Password:<input  type="password" id="password" class="swal2-input">',
+            preConfirm: function () {
+                return new Promise(function (resolve) {
+                    resolve([
+                        $('#name').val(),
+                        $('#email').val(),
+                        $('#password').val()
+                    ])
+                });
+            },
+            onOpen: function () {
+                $('#name').focus()
+            },
+            showCancelButton: true,
+            confirmButtonText: "Create Account"
+        }).then(function (result) {
+            $.ajax({
+                url: "https://api.menlohacks.com/user/create",
+                data: JSON.stringify({
+                    "name" : result[0],
+                    "username": result[1],
+                    "password": result[2]
+                }),
+                contentType: 'application/json; charset=utf-8',
+                error: function (data) {
+                    handleErrors(data, function () {
+                        addUser();
+                    });
+                },
+                success: function(data) {
+                    swal({
+                        title: "Created Account",
+                        type: "success",
+                        timer: 2000
+                    });
+                },
+                type: "POST"
+            });
+        }).catch(swal.noop);
+    }
+    addUser();
+</script>
 </body>
 </html>
