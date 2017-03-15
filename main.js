@@ -318,10 +318,6 @@ $( function() {
        authorizeUser(function () {})
     });
 
-    tab_list.on("click", "#create-account", function() {
-        addUser();
-    });
-
     function addUser() {
         swal({
             title: 'Create Mentor Account',
@@ -581,7 +577,6 @@ $( function() {
             }
         });
         tab_list.append("<li id='logout-li'><button id='logout' class='btn'>Logout</button></li>");
-        $("#create-li").remove();
     }
 
     Pusher.logToConsole = true;
