@@ -29,9 +29,6 @@ $( function() {
 
 
 
-
-
-
     $('#tabs').tabs();
     $.get("https://api.menlohacks.com/times", function(data) {
         hacking_end = new Date(data["data"]["hacking_end_time"]);
@@ -215,7 +212,6 @@ $( function() {
         var expired = results["expired"];
         for(i in expired) {
             result = expired[i];
-            console.log();
             your_tickets.append(
                 "<tr data-id='" + result["id"] + "' class='expired-ticket'>" +
                 "<td>" + result["description"] +  "</td>" +
@@ -514,7 +510,6 @@ $( function() {
         var element = $(this);
         authorizeUser(function () {
             var id = element.parent().parent().attr("data-id");
-            console.log("id" +  id);
             $.ajax({
                 url: "https://api.menlohacks.com/mentorship/reopen",
                 contentType: 'application/json; charset=utf-8',
@@ -602,6 +597,19 @@ $( function() {
     ticket_updates.bind("expire", function (data) {
         updateTickets();
     });
+
+    function refreshEvents()
+    {
+        //get the mins of the current time
+        var mins = new Date().getMinutes();
+        if(mins == "00" || mins == "15" || mins == "30" || mins == "45"){
+            $.get("https://api.menlohacks.com/events", function(data) {
+                event_list.find("tr").remove();
+                loadResults(data["data"]);
+            });
+        }
+    }
+    setInterval(refreshEvents, 60000);
 
 
 });
