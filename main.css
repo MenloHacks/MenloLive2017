@@ -44,10 +44,10 @@ Comment
     z-index: -1;
 
     display: block;
-    background: -moz-linear-gradient(to top, rgba(60, 20, 20, 0.9), rgba(30, 30, 30, 0.5)), url("https://menlohacks.com/images/hero.jpg");
-    background: -webkit-linear-gradient(to top, rgba(60, 20, 20, 0.9), rgba(30, 30, 30, 0.5)), url("https://menlohacks.com/images/hero.jpg");
-    background: -ms-linear-gradient(to top, rgba(60, 20, 20, 0.9), rgba(30, 30, 30, 0.5)), url("https://menlohacks.com/images/hero.jpg");
-    background: linear-gradient(to top, rgba(60, 20, 20, 0.9), rgba(30, 30, 30, 0.5)), url("https://menlohacks.com/images/hero.jpg");
+    background: -moz-linear-gradient(to top, rgba(60, 20, 20, 0.9), rgba(30, 30, 30, 0.5)), url("https://d2b6s0dsvfyqsi.cloudfront.net/hero.jpg");
+    background: -webkit-linear-gradient(to top, rgba(60, 20, 20, 0.9), rgba(30, 30, 30, 0.5)), url("https://d2b6s0dsvfyqsi.cloudfront.net/hero.jpg");
+    background: -ms-linear-gradient(to top, rgba(60, 20, 20, 0.9), rgba(30, 30, 30, 0.5)), url("https://d2b6s0dsvfyqsi.cloudfront.net/hero.jpg");
+    background: linear-gradient(to top, rgba(60, 20, 20, 0.9), rgba(30, 30, 30, 0.5)), url("https://d2b6s0dsvfyqsi.cloudfront.net/hero.jpg");
     background-size: cover;
     width: calc(100% + 30px);
     height: calc(100% + 30px);
