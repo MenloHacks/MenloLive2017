@@ -22,9 +22,9 @@ $( function() {
         encrypted: true
     });
 
-    var announcements_channel = pusher.subscribe('com.vivere.announcement.update');
-    var events_channel = pusher.subscribe('com.vivere.event.update');
-    var ticket_updates = pusher.subscribe("com.vivere.mentor.update");
+    var announcements_channel = pusher.subscribe('com.vivereiii.announcement.update');
+    var events_channel = pusher.subscribe('com.vivereiii.event.update');
+    var ticket_updates = pusher.subscribe("com.vivereiii.mentor.update");
 
 
 
