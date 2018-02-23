@@ -44,10 +44,10 @@ Comment
     z-index: -1;
 
     display: block;
-    background: -moz-linear-gradient(to top, rgba(60, 20, 20, 0.9), rgba(30, 30, 30, 0.5)), url("https://d2b6s0dsvfyqsi.cloudfront.net/hero.jpg");
-    background: -webkit-linear-gradient(to top, rgba(60, 20, 20, 0.9), rgba(30, 30, 30, 0.5)), url("https://d2b6s0dsvfyqsi.cloudfront.net/hero.jpg");
-    background: -ms-linear-gradient(to top, rgba(60, 20, 20, 0.9), rgba(30, 30, 30, 0.5)), url("https://d2b6s0dsvfyqsi.cloudfront.net/hero.jpg");
-    background: linear-gradient(to top, rgba(60, 20, 20, 0.9), rgba(30, 30, 30, 0.5)), url("https://d2b6s0dsvfyqsi.cloudfront.net/hero.jpg");
+    background-image: -moz-linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.25)), url("https://2018.menlohacks.com/images/background_blurred2.jpg");
+    background-image: -webkit-linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.25)), url("https://2018.menlohacks.com/images/background_blurred2.jpg");
+    background-image: -ms-linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.25)), url("https://2018.menlohacks.com/images/background_blurred2.jpg");
+    background-image: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.25)), url("https://2018.menlohacks.com/images/background_blurred2.jpg");
     background-size: cover;
     width: calc(100% + 30px);
     height: calc(100% + 30px);
