@@ -18,7 +18,7 @@ $( function() {
     var open_tickets = $("#open-tickets");
     var your_tickets = $("#your-tickets");
     var your_and_claimed = $("#your-tickets, #claimed-tickets");
-    var pusher = new Pusher('243035ed0c201ba987a5', {
+    var pusher = new Pusher('f5976c8e3914809909a', {
         encrypted: true
     });
 
