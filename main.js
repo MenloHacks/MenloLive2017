@@ -19,7 +19,8 @@ $( function() {
     var your_tickets = $("#your-tickets");
     var your_and_claimed = $("#your-tickets, #claimed-tickets");
     var pusher = new Pusher('f5976c8e3914809909a', {
-        encrypted: true
+        encrypted: true,
+        cluster: "us-2"
     });
 
     var announcements_channel = pusher.subscribe('com.vivereiii.announcement.update');
