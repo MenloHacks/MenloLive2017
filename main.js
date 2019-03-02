@@ -99,6 +99,7 @@ $( function() {
     function loadResults(results) {
         var now = Date.now();
         var old_weekday = "";
+        console.log(results);
         for(var i in results) {
             var parsed_end = Date.parse(results[i]["end_time"]);
             if(now < parsed_end) {
@@ -268,7 +269,7 @@ $( function() {
                html:
                'Description:<input id="description" class="swal2-input" placeholder="Describe your issue">' +
                'Location:<input id="location" class="swal2-input" placeholder="Where are you?">' +
-               'Contact:<input id="contact" class="swal2-input" placeholder="email, phone number, etc.">',
+               'Contact (optional):<input id="contact" class="swal2-input" placeholder="email, phone number, etc.">',
                preConfirm: function () {
                    return new Promise(function (resolve) {
                        resolve([
