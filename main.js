@@ -364,8 +364,6 @@ $( function() {
     }
 
 
-
-
     function updateTickets() {
 
         //Open tickets
@@ -400,6 +398,8 @@ $( function() {
             });
         }
     }
+
+    setInterval(updateTickets, 60000);
 
     function authorizeUser(callback) {
         if ($.cookie("token") && $.cookie("token") != "null"){
@@ -596,9 +596,6 @@ $( function() {
         updateTickets();
     });
 
-    ticket_updates.bind("expire", function (data) {
-        updateTickets();
-    });
 
     function refreshEvents()
     {
