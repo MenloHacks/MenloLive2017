@@ -96,14 +96,20 @@ $( function() {
     $.get("https://api.menlohacks.com/events", function(data) {
         loadResults(data["data"]);
     });
+    function parse_date(date_string) {
+        var a = date_string.split(/[^0-9]/);
+        return (new Date (a[0],a[1]-1,a[2],a[3],a[4],a[5] ));
+    }
+
+
     function loadResults(results) {
         var now = Date.now();
         var old_weekday = "";
         console.log(results);
         for(var i in results) {
-            var parsed_end = Date.parse(results[i]["end_time"]);
+            var parsed_end = parse_date(results[i]["end_time"]);
             if(now < parsed_end) {
-                var parsed_start = Date.parse(results[i]["start_time"]);
+                var parsed_start = parse_date(results[i]["start_time"]);
                 var weekday = weekdays[new Date(parsed_start).getDay()];
                 if (weekday != old_weekday){
                     event_list.append("<tr><td colspan='3' style='background-color:#7D5BA6; color: white' '>" + weekday + "</td></tr>");
