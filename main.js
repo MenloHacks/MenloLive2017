@@ -32,10 +32,10 @@ $( function() {
 
     $('#tabs').tabs();
     $.get("https://api.menlohacks.com/times", function(data) {
-        hacking_end = new Date(data["data"]["hacking_end_time"]);
-        hacking_start = new Date(data["data"]["hacking_start_time"]);
+        hacking_end = parse_date(data["data"]["hacking_end_time"]);
+        hacking_start = parse_date(data["data"]["hacking_start_time"]);
         setInterval(function() {
-            var now = new Date(Date.now());
+            var now = new parse_date(Date.now());
             if (now < hacking_start){
                 until_hacking_end.text(formatDate(hacking_start - new Date(Date.now())));
                 $(".countdown-info").text("Until hacking begins");
@@ -110,7 +110,7 @@ $( function() {
             var parsed_end = parse_date(results[i]["end_time"]);
             if(now < parsed_end) {
                 var parsed_start = parse_date(results[i]["start_time"]);
-                var weekday = weekdays[new Date(parsed_start).getDay()];
+                var weekday = weekdays[parsed_start.getDay()];
                 if (weekday != old_weekday){
                     event_list.append("<tr><td colspan='3' style='background-color:#7D5BA6; color: white' '>" + weekday + "</td></tr>");
                     old_weekday = weekday;
