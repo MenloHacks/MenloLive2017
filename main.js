@@ -35,7 +35,7 @@ $( function() {
         hacking_end = parse_date(data["data"]["hacking_end_time"]);
         hacking_start = parse_date(data["data"]["hacking_start_time"]);
         setInterval(function() {
-            var now = new parse_date(Date.now());
+            var now = new Date(Date.now());
             if (now < hacking_start){
                 until_hacking_end.text(formatDate(hacking_start - new Date(Date.now())));
                 $(".countdown-info").text("Until hacking begins");
