@@ -74,7 +74,7 @@ $( function() {
 
 
     function isoToHumanString(isoTime) {
-        var dt = new Date(isoTime);
+        var dt = parse_date(isoTime);
         var hours = dt.getHours();
         var minutes = dt.getMinutes();
         var ampm = "AM";
