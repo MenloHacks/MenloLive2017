@@ -48,8 +48,18 @@ $( function() {
     });
     function formatDate(date) {
         var hour = Math.floor(date/1000/60/60);
-        var minute = Math.floor(date%(hour*1000*60*60)/1000/60);
-        var second = Math.floor(date%(hour*1000*60*60 + minute*1000*60)/1000);
+        var minute;
+        if (hour > 0) {
+            minute = Math.floor(date%(hour*1000*60*60)/1000/60);
+        } else {
+            minute = Math.floor(date/1000/60);
+        }
+        var second;
+        if (minute > 0) {
+            second = Math.floor(date%(hour*1000*60*60 + minute*1000*60)/1000);
+        } else {
+            second = date/1000;
+        }
         if (minute < 10){
             minute = "0" + minute.toString();
         }
