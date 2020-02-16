@@ -44,10 +44,10 @@ Comment
     z-index: -1;
 
     display: block;
-    background-image: -moz-linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url("https://2019.menlohacks.com/images/background.jpg");
-    background-image: -webkit-linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url("https://2019.menlohacks.com/images/background.jpg");
-    background-image: -ms-linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url("https://2019.menlohacks.com/images/background.jpg");
-    background-image: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url("https://2019.menlohacks.com/images/background.jpg");
+    background-image: -moz-linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url("https://2020.menlohacks.com/img/banner/background.jpg");
+    background-image: -webkit-linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url("https://2020.menlohacks.com/img/banner/background.jpg");
+    background-image: -ms-linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url("https://2020.menlohacks.com/img/banner/background.jpg");
+    background-image: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url("https://2020.menlohacks.com/img/banner/background.jpg");
     background-size: cover;
     width: calc(100% + 30px);
     height: calc(100% + 30px);
