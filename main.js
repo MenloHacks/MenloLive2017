@@ -18,14 +18,14 @@ $( function() {
     var open_tickets = $("#open-tickets");
     var your_tickets = $("#your-tickets");
     var your_and_claimed = $("#your-tickets, #claimed-tickets");
-    var pusher = new Pusher('252afc960056ea4d05ea', {
+    var pusher = new Pusher('7af4db3ba77255e243af', {
         encrypted: true,
-        cluster: "us2"
+        cluster: "us3"
     });
 
-    var announcements_channel = pusher.subscribe('com.vivereiv.announcement.update');
-    var events_channel = pusher.subscribe('com.vivereiv.event.update');
-    var ticket_updates = pusher.subscribe("com.vivereiv.mentor.update");
+    var announcements_channel = pusher.subscribe('com.viverev.announcement.update');
+    var events_channel = pusher.subscribe('com.viverev.event.update');
+    var ticket_updates = pusher.subscribe("com.viverev.mentor.update");
 
 
 
